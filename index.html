@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -157,7 +157,7 @@
       <div>
         <div class="eyebrow">Weapon panel optimizer · Regulation 1.35</div>
         <h1>Dark Souls III 加点面板计算器</h1>
-        <p class="subtitle">选择武器、质变和强化等级，给定力量、敏捷、智力、信仰的总属性点，搜索面板或单一伤害属性的最高合法方案。</p>
+        <p class="subtitle">选择武器、变质和强化等级，给定力量、敏捷、智力、信仰的总属性点，搜索面板或单一伤害属性的最高合法方案。</p>
       </div>
       <div class="credit">By Tamco&amp;Danny</div>
     </div>
@@ -177,7 +177,7 @@
         </div>
         <div class="field select-row">
           <div>
-          <label for="infusionSelect">参考质变</label>
+          <label for="infusionSelect">参考变质</label>
             <select id="infusionSelect"></select>
           </div>
           <div>
@@ -339,7 +339,7 @@
       const select = $('infusionSelect');
       if (!weapon) { select.innerHTML = ''; return; }
       select.innerHTML = weapon.variants.map((v, index) => {
-        const label = INFUSION_LABELS[v.infusionIndex] || 质变 ${v.infusionIndex}`;
+        const label = INFUSION_LABELS[v.infusionIndex] || `变质 ${v.infusionIndex}`;
         const title = v.infusionIndex === 0 ? `${label} · ${v.name}` : `${label} · ${v.name}`;
         return `<option value="${v.id}">${escapeHtml(title)}</option>`;
       }).join('');
@@ -552,7 +552,7 @@
         hero.innerHTML = `<div><div class="hero-label">目标最高</div><h2>没有满足条件的方案</h2><p class="hero-note">请提高总属性点，或降低最低值/武器需求。</p></div><div class="hero-score"><strong>—</strong><span>${escapeHtml(TARGET_NAMES[target])}</span></div>`;
         return;
       }
-      const infusion = INFUSION_LABELS[build.infusionIndex] || '质变';
+      const infusion = INFUSION_LABELS[build.infusionIndex] || '变质';
       hero.innerHTML = `<div><div class="hero-label">${escapeHtml(TARGET_NAMES[target])}最高 · ${escapeHtml(infusion)} · ${escapeHtml(build.variantName || variant.name)}</div><h2>${escapeHtml(statsText(build.stats))}</h2><p class="hero-note">精确总点数 ${build.stats.reduce((a, b) => a + b, 0)}，满足武器需求。该结果已自动比较全部质变。</p><div class="build-chips"><span class="chip">物理 <b>${fmt(build.physical)}</b></span><span class="chip">魔力 <b>${fmt(build.magic)}</b></span><span class="chip">火 <b>${fmt(build.fire)}</b></span><span class="chip">雷 <b>${fmt(build.lightning)}</b></span><span class="chip">暗 <b>${fmt(build.dark)}</b></span></div></div><div class="hero-score"><strong>${fmt(build[target])}</strong><span>${escapeHtml(TARGET_NAMES[target])}</span></div>`;
     }
 
@@ -561,7 +561,7 @@
       const items = $('showAllInput').checked ? allItems : allItems.filter(item => item.key === target);
       $('metricGrid').innerHTML = items.map(item => {
         const build = result.best[item.key];
-        return `<div class="metric-card ${item.key === target ? 'active' : ''}"><div class="metric-name">${item.label}</div><div class="metric-value">${build ? fmt(build[item.key]) : '—'}</div><div class="metric-build">${build ? escapeHtml((INFUSION_LABELS[build.infusionIndex] || '质变') + ' · ' + build.stats.join(' / ')) : '无合法方案'}</div></div>`;
+        return `<div class="metric-card ${item.key === target ? 'active' : ''}"><div class="metric-name">${item.label}</div><div class="metric-value">${build ? fmt(build[item.key]) : '—'}</div><div class="metric-build">${build ? escapeHtml((INFUSION_LABELS[build.infusionIndex] || '变质') + ' · ' + build.stats.join(' / ')) : '无合法方案'}</div></div>`;
       }).join('');
     }
 
@@ -581,7 +581,7 @@
       $('rankingBody').innerHTML = rows.length ? rows.map((row, index) => {
         const estimate = estimateLightAttack(row, enemyResult);
         const lightDamage = estimate && !estimate.error ? fmt(estimate.total) : '—';
-        return `<tr class="${index === 0 ? 'top-row' : ''}"><td>${index + 1}</td><td>${escapeHtml((INFUSION_LABELS[row.infusionIndex] || '质变') + ' · ' + row.stats.join(' / '))}</td><td>${fmt(row[target])}</td><td>${fmt(row.physical)}</td><td>${fmt(row.magic)}</td><td>${fmt(row.fire)}</td><td>${fmt(row.lightning)}</td><td>${fmt(row.dark)}</td><td>${fmt(row.total)}</td><td>${lightDamage}</td></tr>`;
+        return `<tr class="${index === 0 ? 'top-row' : ''}"><td>${index + 1}</td><td>${escapeHtml((INFUSION_LABELS[row.infusionIndex] || '变质') + ' · ' + row.stats.join(' / '))}</td><td>${fmt(row[target])}</td><td>${fmt(row.physical)}</td><td>${fmt(row.magic)}</td><td>${fmt(row.fire)}</td><td>${fmt(row.lightning)}</td><td>${fmt(row.dark)}</td><td>${fmt(row.total)}</td><td>${lightDamage}</td></tr>`;
       }).join('') : '<tr><td colspan="10" class="small-muted">没有满足条件的方案</td></tr>';
     }
 
