@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dark Souls III 1.35 加点面板计算器</title>  
+  <title>Dark Souls III 1.35 加点面板计算器</title>
   <!-- 
   你好呀，这里是Tamco。没想到居然会有人想点进来查看。虽然也没有要特地隐藏的意思……
   总而言之，如果使用过程中遇到任何的bug或者在查看代码的时候有任何的建议都可以来联系我。
@@ -194,6 +194,7 @@
         </div>
         <div class="field">
           <label>每项最低值</label>
+          <p id="weaponRequirements" class="hint">当前武器最低需求：—</p>
           <div class="stat-grid">
             <div class="stat-input"><label for="minStr">力</label><input id="minStr" type="number" min="1" max="99" value="1"></div>
             <div class="stat-input"><label for="minDex">敏</label><input id="minDex" type="number" min="1" max="99" value="1"></div>
@@ -442,14 +443,17 @@
     function syncRequirementMinimums() {
       const variant = getSelectedVariant();
       if (!variant) return;
+      const requirements = variant.requirements || [0, 0, 0, 0];
+      const effectiveRequirements = requirements.map((value, index) => {
+        const raw = Math.max(1, Math.floor(value || 0));
+        return index === 0 && $('twoHandInput')?.checked ? Math.max(1, Math.ceil(raw / 1.5)) : raw;
+      });
+      $('weaponRequirements').textContent = `当前武器最低需求：力 ${effectiveRequirements[0]} / 敏 ${effectiveRequirements[1]} / 智 ${effectiveRequirements[2]} / 信 ${effectiveRequirements[3]}${$('twoHandInput')?.checked ? '（双手力量按 1.5 倍折算）' : ''}`;
       ['minStr', 'minDex', 'minInt', 'minFth'].forEach((id, index) => {
         const input = $(id);
-        const rawRequirement = Math.max(1, Math.floor(variant.requirements[index] || 0));
-        const requirement = index === 0 && $('twoHandInput')?.checked
-          ? Math.max(1, Math.ceil(rawRequirement / 1.5))
-          : rawRequirement;
-        input.min = String(requirement);
-        input.value = String(requirement);
+        input.min = '1';
+        const current = Number(input.value);
+        if (!Number.isFinite(current) || current < effectiveRequirements[index]) input.value = String(effectiveRequirements[index]);
       });
     }
 
